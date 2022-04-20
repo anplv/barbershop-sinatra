@@ -10,30 +10,29 @@ get '/about' do
   erb :about
 end
 
-get '/contacts' do
-  erb :contacts
-end
-
 get '/visit' do
   erb :visit
 end
 
 post '/visit' do
+  @username = params[:username]
+  @datetime = params[:datetime]
+  @barber = params[:barber]
+  f = File.new('users.txt', 'a')
+  f.write "Клиент: #{@username},\n Дата и время: #{@datetime},\n Парикмахер: #{@barber} \n"
+  f.close
   erb :visit
 end
 
-post '/' do
-  @user_name = params[:user_name]
-  @phone = params[:phone]
-  @date_time = params[:date_time]
-  @baber = params[:barber]
+get '/contacts' do
+  erb :contacts
+end
 
-  @title = 'Thank you!'
-  @message = "Уважаемый #{@user_name}, мы ждём вас #{@date_time} у выбранного парикмахера #{@barber}."
-
-  f = File.open 'users.txt', 'a'
-  f.write "User: #{@user_name}, phone: #{@phone}, date and time: #{@date_time}. Baber: #{@barber}.\n"
+post '/contacts' do
+  @user_email = params[:user_email]
+  @comment = params[:comment]
+  f = File.new('contacts.txt', 'a')
+  f.write "Email: #{@user_email},\n Комментарий: #{@comment}\n"
   f.close
-
-  erb :message
+  erb :contacts
 end
