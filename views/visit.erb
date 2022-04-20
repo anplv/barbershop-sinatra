@@ -3,10 +3,13 @@
   <div class="mb-3">
   <label for="exampleFormControlInput1" class="form-label">Ваше имя</label>
   <input name="username" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Ваше имя">
+  <label for="exampleFormControlInput1" class="form-label">Ваш телефон</label><br>
+  <input name="phone_number" type="tel" class="form-control" id="exampleFormControlInput1" list="tel-list" placeholder="+7 (900) 123-45-67" pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}"><br>
   <label >Дата и время</label><br>
-  <input name="datetime" type="datetime-local"><br>
+  <input name="datetime" type="datetime-local" class="form-control" id="exampleFormControlInput1"><br>
 <label for="barber">Выбор парикмахера</label>
-  <div><select name="barber">
+  <div>
+  <select name="barber" class="form-select" aria-label="Default select example">
     <option value="none" selected>Выберите парикмахера...</option>
     <option value="Петров">Петров</option>
     <option value="Иванов">Иванов</option>

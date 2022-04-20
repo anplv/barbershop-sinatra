@@ -15,13 +15,22 @@ get '/visit' do
 end
 
 post '/visit' do
-  @username = params[:username]
+  @username = params[:username].strip
+  @phone_number = params[:phone_number].strip
   @datetime = params[:datetime]
   @barber = params[:barber]
   f = File.new('users.txt', 'a')
-  f.write "Клиент: #{@username},\n Дата и время: #{@datetime},\n Парикмахер: #{@barber} \n"
+  f.write "Клиент: #{@username},\n Номер телефона: #{@phone_number},\n Дата и время: #{@datetime},\n Парикмахер: #{@barber}\n"
   f.close
-  erb :visit
+
+  # hash_validation = { username: 'Введите имя',
+  #                     user_phone: 'Введите номер телефона' }
+
+  # if @user_email
+
+  # end
+
+  erb "Готово! Клиент: #{@username}, Номер телефона: #{@phone_number}, Дата и время: #{@datetime}, Парикмахер: #{@barber} "
 end
 
 get '/contacts' do
