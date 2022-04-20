@@ -23,13 +23,16 @@ post '/visit' do
   f.write "Клиент: #{@username},\n Номер телефона: #{@phone_number},\n Дата и время: #{@datetime},\n Парикмахер: #{@barber}\n"
   f.close
 
-  # hash_validation = { username: 'Введите имя',
-  #                     user_phone: 'Введите номер телефона' }
+  hash_validation = { username: 'Введите имя',
+                      phone_number: 'Введите номер телефона',
+                      datetime: 'Выберите дату и время' }
 
-  # if @user_email
-
-  # end
-
+  hash_validation.each do |key, _value|
+    if params[key.to_sym] == ''
+      @error = hash_validation[key.to_sym]
+      return erb :visit
+    end
+  end
   erb "Готово! Клиент: #{@username}, Номер телефона: #{@phone_number}, Дата и время: #{@datetime}, Парикмахер: #{@barber} "
 end
 
