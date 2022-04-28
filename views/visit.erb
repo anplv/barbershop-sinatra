@@ -11,9 +11,9 @@
   <div>
   <select name="barber" class="form-select" aria-label="Default select example">
     <option value="none" selected>Выберите парикмахера...</option>
-    <option value="Петров">Петров</option>
-    <option value="Иванов">Иванов</option>
-    <option value="Сидоров">Сидоров</option>
+    <option value="Петров"<%= @barber == "Петров" ? "selected" : "" %>>Петров</option>
+    <option value="Иванов"<%= @barber == "Иванов" ? "selected" : "" %>>Иванов</option>
+    <option value="Сидоров" <%= @barber == "Сидоров" ? "selected" : "" %>>Сидоров</option>
   </select><br>
   <button type="submit" class="btn btn-primary">Отправить</button>
 </form>
