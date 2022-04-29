@@ -3,6 +3,16 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
 
+configure do
+  @db = SQLite3::Database.new 'barbershop-sinatra/db/BarberShop.db'
+  @db.execute "CREATE TABLE 'Contacts' (
+    'Id'	INTEGER UNIQUE,
+    'Email'	TEXT,
+    'Message'	TEXT,
+    PRIMARY KEY('Id' AUTOINCREMENT)
+  );"
+end
+
 get '/' do
   erb 'Hello! <a href="https://github.com/bootstrap-ruby/sinatra-bootstrap">Original</a> pattern has been modified for <a href="http://rubyschool.us/">Ruby School</a>'
 end
@@ -20,10 +30,8 @@ post '/visit' do
   @phone_number = params[:phone_number].strip
   @datetime = params[:datetime]
   @barber = params[:barber]
-  db = SQLite3::Database.new 'barbershop-sinatra/db/BarberShop.db'
-  db.execute "INSERT INTO Users (Name, Phone, Recording_date, Barber)
+  @db.execute "INSERT INTO Users (Name, Phone, Recording_date, Barber)
               VALUES ('#{@username}', '#{@phone_number}', '#{@datetime}', '#{@barber}')"
-  db.close
 
   hash_validation = { username: 'Введите имя',
                       phone_number: 'Введите номер телефона',
@@ -45,8 +53,7 @@ end
 post '/contacts' do
   @user_email = params[:user_email]
   @comment = params[:comment]
-  db = SQLite3::Database.new 'barbershop-sinatra/db/BarberShop.db'
-  db.execute "INSERT INTO Contacts (Email, Message)
+  @db.execute "INSERT INTO Contacts (Email, Message)
               VALUES ('#{@user_email}', '#{@comment}')"
   db.close
   erb 'Готово!'
