@@ -3,14 +3,41 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
 
+def get_db
+  SQLite3::Database.new 'db/BarberShop.db'
+end
+
 configure do
-  @db = SQLite3::Database.new 'barbershop-sinatra/db/BarberShop.db'
-  @db.execute "CREATE TABLE 'Contacts' (
+  db = get_db
+  db.execute "CREATE TABLE IF NOT EXISTS 'Users' (
+    'Id'	INTEGER UNIQUE,
+    'Name'	TEXT,
+    'Phone'	TEXT,
+    'Recording_date'	TEXT,
+    'Barber'	TEXT,
+    PRIMARY KEY('Id' AUTOINCREMENT)
+  )"
+  db.execute "CREATE TABLE IF NOT EXISTS 'Contacts' (
     'Id'	INTEGER UNIQUE,
     'Email'	TEXT,
     'Message'	TEXT,
     PRIMARY KEY('Id' AUTOINCREMENT)
-  );"
+  )"
+  db.close
+end
+
+def save_form_visit_to_database
+  db = get_db
+  db.execute 'INSERT INTO Users (Name, Phone, Recording_date, Barber)
+  VALUES (?, ?, ?, ?)', [@username, @phone_number, @datetime, @barber]
+  db.close
+end
+
+def save_form_contacts_to_database
+  db = get_db
+  db.execute 'INSERT INTO Contacts (Email, Message)
+              VALUES (?, ?)', [@user_email, @comment]
+  db.close
 end
 
 get '/' do
@@ -30,8 +57,6 @@ post '/visit' do
   @phone_number = params[:phone_number].strip
   @datetime = params[:datetime]
   @barber = params[:barber]
-  @db.execute "INSERT INTO Users (Name, Phone, Recording_date, Barber)
-              VALUES ('#{@username}', '#{@phone_number}', '#{@datetime}', '#{@barber}')"
 
   hash_validation = { username: 'Введите имя',
                       phone_number: 'Введите номер телефона',
@@ -43,6 +68,8 @@ post '/visit' do
       return erb :visit
     end
   end
+  save_form_visit_to_database
+
   erb "Готово! Клиент: #{@username}, Номер телефона: #{@phone_number}, Дата и время: #{@datetime}, Парикмахер: #{@barber} "
 end
 
@@ -53,8 +80,6 @@ end
 post '/contacts' do
   @user_email = params[:user_email]
   @comment = params[:comment]
-  @db.execute "INSERT INTO Contacts (Email, Message)
-              VALUES ('#{@user_email}', '#{@comment}')"
-  db.close
+  save_form_contacts_to_database
   erb 'Готово!'
 end
