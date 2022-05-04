@@ -2,9 +2,12 @@ require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
+require 'time'
 
 def get_db
-  SQLite3::Database.new 'db/BarberShop.db'
+  db = SQLite3::Database.new 'db/BarberShop.db'
+  db.results_as_hash = true
+  db
 end
 
 configure do
@@ -82,4 +85,12 @@ post '/contacts' do
   @comment = params[:comment]
   save_form_contacts_to_database
   erb 'Готово!'
+end
+
+get '/showusers' do
+  db = get_db
+
+  @results = db.execute 'SELECT * FROM Users ORDER BY id DESC'
+
+  erb :showusers
 end
