@@ -58,7 +58,7 @@ end
 post '/visit' do
   @username = params[:username].strip
   @phone_number = params[:phone_number].strip
-  @datetime = params[:datetime]
+  @datetime = Time.parse(params[:datetime]).strftime('%d-%m-%Y %I:%M')
   @barber = params[:barber]
 
   hash_validation = { username: 'Введите имя',
