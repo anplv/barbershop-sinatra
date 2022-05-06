@@ -11,9 +11,9 @@
   <div>
   <select name="barber" class="form-select" aria-label="Default select example">
     <option value="none" selected>Выберите парикмахера...</option>
-    <option value="Петров"<%= @barber == "Петров" ? "selected" : "" %>>Петров</option>
-    <option value="Иванов"<%= @barber == "Иванов" ? "selected" : "" %>>Иванов</option>
-    <option value="Сидоров" <%= @barber == "Сидоров" ? "selected" : "" %>>Сидоров</option>
+    <% @barbers.each do |item| %>
+      <option <%= @barber == item['Name'] ? "selected" : "" %>><%= item["Name"] %></option>
+    <% end %>
   </select><br>
   <button type="submit" class="btn btn-primary">Отправить</button>
 </form>
