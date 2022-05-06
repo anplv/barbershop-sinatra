@@ -20,6 +20,11 @@ def get_db
   db
 end
 
+before do
+  db = get_db
+  @barbers = db.execute 'SELECT * FROM Barbers'
+end
+
 configure do
   db = get_db
   db.execute "CREATE TABLE IF NOT EXISTS 'Users' (
@@ -73,7 +78,7 @@ end
 post '/visit' do
   @username = params[:username].strip
   @phone_number = params[:phone_number].strip
-  @datetime = Time.parse(params[:datetime]).strftime('%d-%m-%Y %I:%M')
+  @datetime = params[:datetime]
   @barber = params[:barber]
 
   hash_validation = { username: 'Введите имя',
@@ -81,14 +86,14 @@ post '/visit' do
                       datetime: 'Выберите дату и время' }
 
   hash_validation.each do |key, _value|
-    if params[key.to_sym] == ''
+    if params[key.to_sym] == '' || nil
       @error = hash_validation[key.to_sym]
       return erb :visit
     end
   end
   save_form_visit_to_database
 
-  erb "Готово! Клиент: #{@username}, Номер телефона: #{@phone_number}, Дата и время: #{@datetime}, Парикмахер: #{@barber} "
+  erb "Готово! Клиент: #{@username}, Номер телефона: #{@phone_number}, Дата и время: #{Time.parse(@datetime).strftime('%d-%m-%Y в %I:%M')}, Парикмахер: #{@barber} "
 end
 
 get '/contacts' do

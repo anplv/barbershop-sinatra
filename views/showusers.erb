@@ -14,7 +14,7 @@
     <tr>
         <td><%= row["Name"] %></td>
         <td><%= row["Phone"] %></td>
-        <td><%= row["Recording_date"] %></td>
+        <td><%= Time.parse(row["Recording_date"]).strftime('%d-%m-%Y в %I:%M') %></td>
         <td><%= row["Barber"] %></td>
     </tr>
   <% end %>
