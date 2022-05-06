@@ -4,13 +4,13 @@ require 'sinatra/reloader'
 require 'sqlite3'
 require 'time'
 
-def is_barber_exists?(db, _name)
-  db.execute('SELECT * FROM Barbers WHERE name = ?', [name]).length > 0
+def is_barber_exists?(db, name)
+  db.execute('SELECT * FROM Barbers WHERE Name = ?', name).length.positive?
 end
 
 def seed_db(db, barbers)
   barbers.each do |barber|
-    db.execute 'INSERT INTO Barbers (name) VALUES (?)', [barbers] unless is_barber_exists?(db, barber)
+    db.execute('INSERT INTO Barbers (Name) VALUES (?)', [barber]) unless is_barber_exists?(db, barber)
   end
 end
 
@@ -41,7 +41,7 @@ configure do
     'Name'	TEXT,
     PRIMARY KEY('Id' AUTOINCREMENT)
   )"
-  db.close
+  seed_db(db, ['Петр Петров', 'Иван Иванов', 'Сидор Сидоров', 'Семён Семёнов'])
 end
 
 def save_form_visit_to_database
